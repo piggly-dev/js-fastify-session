@@ -21,7 +21,7 @@ export default class SessionCookie {
 
 		this._props = {
 			path: options.path || '/',
-			secure: options.secure ?? undefined,
+			secure: options.secure ?? 'auto',
 			sameSite: options.sameSite || 'lax',
 			domain: options.domain || undefined,
 			httpOnly: options.httpOnly !== undefined ? options.httpOnly : true,
@@ -31,16 +31,20 @@ export default class SessionCookie {
 			signer: options.signer,
 		};
 
+		this._expires = undefined;
+
 		this._original = {
 			maxAge: options.originalMaxAge || options.maxAge || undefined,
-			expires: options.expires ? new Date(options.expires) : undefined,
+			expires: options.originalExpires || options.expires || undefined,
 		};
 
-		if (options.originalMaxAge) {
-			this._props.maxAge = this._original.maxAge;
+		if (this._original.expires) {
+			this._original.expires = new Date(this._original.expires);
 		}
 
-		if (options.expires) {
+		if (this._original.maxAge) {
+			this._props.maxAge = this._original.maxAge;
+		} else if (options.expires) {
 			this._props.expires = new Date(options.expires);
 			this._original.maxAge = undefined;
 		}
@@ -53,8 +57,6 @@ export default class SessionCookie {
 				this._props.sameSite = 'lax';
 			}
 		}
-
-		this._expires = undefined;
 	}
 
 	public set expires(date: Date) {
