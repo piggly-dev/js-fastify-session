@@ -1,0 +1,9 @@
+/build
+/coverage
+/node_modules
+/debug
+/tmp
+/.jest
+
+*.config.js
+*.config.json
