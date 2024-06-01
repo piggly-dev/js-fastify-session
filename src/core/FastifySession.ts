@@ -1,12 +1,12 @@
 import { FastifyRequest } from 'fastify';
 
 import type { ISessionPayload, ISessionStore } from '@/types/interfaces';
-import type { FastifySessionCookieOptions } from '@/types/options';
+import type { SessionCookieOptions } from '@/types/options';
 import type { TOrNullable } from '@/types/types';
 
-import FastifySessionCookie from '@/core/FastifySessionCookie';
 import { OnSessionModifyHook } from '@/types/hook';
 import { generateId, hashSession } from '@/utils';
+import SessionCookie from '@/core/SessionCookie';
 import SessionStore from '@/core/SessionStore';
 
 export type FastifySessionOptions = {
@@ -15,7 +15,7 @@ export type FastifySessionOptions = {
 	keep_session: boolean;
 	session_id?: string;
 	payload?: ISessionPayload;
-	cookie?: FastifySessionCookieOptions;
+	cookie?: SessionCookieOptions;
 	previous?: FastifySession;
 	callables?: Partial<SessionCallables>;
 };
@@ -36,7 +36,7 @@ export default class FastifySession {
 
 	private _payload: ISessionPayload;
 
-	private _cookie: FastifySessionCookie;
+	private _cookie: SessionCookie;
 
 	private _keep_session: boolean;
 
@@ -77,7 +77,7 @@ export default class FastifySession {
 			throw new Error('Cookie options are required for new sessions.');
 		}
 
-		this._cookie = new FastifySessionCookie(cookieOptions, request);
+		this._cookie = new SessionCookie(cookieOptions, request);
 
 		this._id = session_id ?? this._callables.generateId();
 

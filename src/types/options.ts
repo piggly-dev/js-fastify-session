@@ -2,10 +2,7 @@ import type { CookieSerializeOptions, Signer } from '@fastify/cookie';
 
 import type { ISessionStore } from '@/types/interfaces';
 
-export type FastifySessionCookieOptions = Omit<
-	CookieSerializeOptions,
-	'signed'
-> & {
+export type SessionCookieOptions = Omit<CookieSerializeOptions, 'signed'> & {
 	originalMaxAge?: number;
 	originalExpires?: Date;
 	signer: Signer;
@@ -22,7 +19,7 @@ export type FastifySessionPluginInternalOptions = {
 		name: string;
 		algorithm: string;
 		options: Omit<
-			FastifySessionCookieOptions,
+			SessionCookieOptions,
 			'originalMaxAge' | 'originalExpires' | 'signer'
 		>;
 	};
@@ -43,7 +40,7 @@ export type FastifySessionPluginOptions = {
 		name?: string;
 		algorithm?: string;
 		options?: Omit<
-			FastifySessionCookieOptions,
+			SessionCookieOptions,
 			'originalMaxAge' | 'originalExpires' | 'signer'
 		>;
 	};

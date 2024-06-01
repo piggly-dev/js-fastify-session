@@ -2,19 +2,19 @@ import { FastifyRequest } from 'fastify';
 
 import type { Signer } from '@fastify/cookie';
 
-import { FastifySessionCookieOptions } from '@/types/options';
+import { SessionCookieOptions } from '@/types/options';
 
-export default class FastifySessionCookie {
+export default class SessionCookie {
 	private _props: Omit<
-		FastifySessionCookieOptions,
+		SessionCookieOptions,
 		'originalMaxAge' | 'originalExpires'
 	>;
 
-	private _original: Pick<FastifySessionCookieOptions, 'maxAge' | 'expires'>;
+	private _original: Pick<SessionCookieOptions, 'maxAge' | 'expires'>;
 
 	private _expires?: Date;
 
-	constructor(options: FastifySessionCookieOptions, request: FastifyRequest) {
+	constructor(options: SessionCookieOptions, request: FastifyRequest) {
 		if (!options.signer) {
 			throw new Error('Cookie signer is required.');
 		}
@@ -82,7 +82,7 @@ export default class FastifySessionCookie {
 		return this._props.signer;
 	}
 
-	public get options(): FastifySessionCookieOptions {
+	public get options(): SessionCookieOptions {
 		return {
 			path: this._props.path,
 			secure: this._props.secure,
