@@ -39,6 +39,7 @@
 				"order": "desc",
 				"groups": [
 					["builtin", "external"],
+					["fastify"],
 					["parent-type", "sibling-type", "index-type", "builtin-type"],
 					"side-effect",
 					"internal-type",
@@ -49,6 +50,14 @@
 					"type",
 					"unknown"
 				],
+				"custom-groups": {
+					"value": {
+						"fastify": ["@fastify/*", "fastify-*"]
+					},
+					"type": {
+						"fastify": ["@fastify/*", "fastify-*"]
+					}
+				},
 				"newlines-between": "always",
 				"internal-pattern": ["@/**"]
 			}
@@ -63,6 +72,7 @@
 		"@typescript-eslint/no-explicit-any": "off",
 		"@typescript-eslint/no-throw-literal": "off",
 		"@typescript-eslint/naming-convention": "off",
-		"import/prefer-default-export": "off"
+		"import/prefer-default-export": "off",
+		"react/jsx-filename-extension": "off"
 	}
 }
