@@ -18,8 +18,12 @@ export const evaluateSecret = (options: any): TOrUndefined<Error> => {
 		return new Error('Invalid options provided.');
 	}
 
-	if (typeof options.secret === 'string' && options.secret.length < 32) {
-		return new Error('Session secret must have length 32 or greater.');
+	if (typeof options.secret === 'string') {
+		if (options.secret.length < 32) {
+			return new Error('Session secret must have length 32 or greater.');
+		}
+
+		return undefined;
 	}
 
 	if (Array.isArray(options.secret)) {
@@ -29,30 +33,27 @@ export const evaluateSecret = (options: any): TOrUndefined<Error> => {
 			);
 		}
 
-		const error: TOrUndefined<Error> = options.secret.find((secret: any) => {
-			if (typeof secret === 'string' && secret.length < 32) {
-				return new Error('Session secret must have length 32 or greater.');
-			}
+		let error;
 
-			return undefined;
+		options.secret.forEach((secret: any) => {
+			if (typeof secret === 'string' && secret.length < 32) {
+				error = new Error('Session secret must have length 32 or greater.');
+			}
 		});
 
 		return error;
 	}
 
 	if (
-		!(
-			options.secret &&
-			typeof options.secret.sign === 'function' &&
-			typeof options.secret.unsign === 'function'
-		)
+		typeof options.secret?.sign === 'function' &&
+		typeof options.secret?.unsign === 'function'
 	) {
-		return new Error(
-			'The session secret option is required, and must be a String, Array of Strings, or a signer object with .sign and .unsign methods.',
-		);
+		return undefined;
 	}
 
-	return undefined;
+	return new Error(
+		'The session secret option is required, and must be a String, Array of Strings, or a signer object with .sign and .unsign methods.',
+	);
 };
 
 export const hashSession = (session: {
@@ -74,7 +75,7 @@ export const generateId = () => {
 	const buf = Buffer.allocUnsafe(24);
 	cache.copy(buf, 0, pos, (pos += 24));
 
-	if (Buffer.isEncoding('base64url')) {
+	if (Buffer.isEncoding('base64url') === false) {
 		return buf
 			.toString('base64')
 			.replace(/=/g, '')
@@ -92,7 +93,7 @@ export const evaluateUrlPath = (path: string, cookie_path: string): boolean => {
 	const pathLength = path.length;
 	const cookiePathLength = cookie_path.length;
 
-	if (pathLength <= cookiePathLength) {
+	if (pathLength < cookiePathLength) {
 		return false;
 	}
 
